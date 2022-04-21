@@ -1,3 +1,4 @@
+var fs = require('fs');
 
 var defaultCorsHeaders = {
   'access-control-allow-origin': '*',
@@ -14,17 +15,23 @@ var requestHandler = function(request, response) {
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = 'text/plain';
 
-
-  if (request.url === '/classes/messages' && request.method === 'GET') {
+  if (request.url === '/') {
+    fs.readFile('../client/chatterbox.html', 'utf-8', (err, data) => {
+      headers['Content-Type'] = 'text/html';
+      response.writeHead(statusCode, headers);
+      response.end(data);
+    });
+  } else if (request.url === '/classes/messages' && request.method === 'GET') {
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify(_data));
   } else if (request.url === '/classes/messages' && request.method === 'POST') {
-    response.writeHead(201, headers);
+
     var body = '';
     request.on('data', (chunk) => {
       body += chunk;
     }).on('end', () => {
-      console.log(body);
+      //console.log(body);
+      response.writeHead(201, headers);
       _data.results.push(JSON.parse(body));
       response.end();
     });

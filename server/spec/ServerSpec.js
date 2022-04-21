@@ -97,10 +97,27 @@ describe('Node Server Request Listener Function', function() {
     var req = new stubs.request('/arglebargle', 'GET');
     var res = new stubs.response();
 
+
     handler.requestHandler(req, res);
 
     expect(res._responseCode).to.equal(404);
     expect(res._ended).to.equal(true);
+  });
+
+  it('Should 200 when asked for /', function() {
+    var req = new stubs.request('/', 'GET');
+    var res = new stubs.response();
+
+    var promise = new Promise((resolve, reject) => {
+      resolve(handler.requestHandler(req, res));
+    });
+
+    promise.then(() => {
+      expect(res._responseCode).to.equal(200);
+      console.log(res._headers);
+      expect(res._headers['Content-Type']).to.equal('text.html');
+    }).catch(err => { console.log(err); });
+
   });
 
 });

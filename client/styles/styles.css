@@ -1,0 +1,125 @@
+body {
+    background: #eee;
+    text-align: center;
+    padding: 0 25px;
+    font-family: arial, sans-serif;
+}
+
+#main, #chats {
+    width: 500px;
+    margin: auto;
+    text-align: left;
+    background: white;
+    padding: 50px 60px;
+    border: solid #ddd;
+    border-width: 0 1px 1px 1px;
+}
+
+#main h1 {
+    margin-top: 0;
+    font-size: 35px;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+#main h1 span {
+    font-style:italic;
+}
+
+#main ul {
+    padding-left: 20px;
+}
+
+#main .error {
+    border: 1px solid red;
+    background: #FDEFF0;
+    padding: 20px;
+}
+
+#main .success {
+    margin-top: 25px;
+}
+
+#main .success code {
+    font-size: 12px;
+    color: green;
+    line-height: 13px;
+}
+
+form {
+    padding: 20px;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+form input[type=text] {
+    margin-right: 10px;
+    width: 70%;
+    font-size: 12px;
+    padding: 5px;
+}
+
+.chat {
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #eee;
+}
+
+.chat .username {
+    font-weight: 800;
+}
+
+.chat:hover {
+    background-color: #ddd;
+}
+
+.spinner {
+    float: right;
+    height: 46px;
+    margin-bottom: 5px;
+}
+
+.spinner img {
+    padding: 10px;
+}
+
+.friend {
+    color: #fff;
+    background-color: #0090da;
+}
+
+.username {
+    cursor: pointer;
+}
+
+.friend {
+    /* height: 100%; */
+
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 1800% 1800%;
+
+  -webkit-animation: rainbow 18s ease infinite;
+  -z-animation: rainbow 18s ease infinite;
+  -o-animation: rainbow 18s ease infinite;
+    animation: rainbow 18s ease infinite;}
+
+  @-webkit-keyframes rainbow {
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
+  @-moz-keyframes rainbow {
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
+  @-o-keyframes rainbow {
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
+  @keyframes rainbow {
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
