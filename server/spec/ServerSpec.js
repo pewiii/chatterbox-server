@@ -103,21 +103,26 @@ describe('Node Server Request Listener Function', function() {
     expect(res._responseCode).to.equal(404);
     expect(res._ended).to.equal(true);
   });
+});
 
-  it('Should 200 when asked for /', function() {
-    var req = new stubs.request('/', 'GET');
-    var res = new stubs.response();
-
-    var promise = new Promise((resolve, reject) => {
-      resolve(handler.requestHandler(req, res));
+describe('Node Server Request Listener Function', function() {
+  var req = new stubs.request('/', 'GET');
+  var res = new stubs.response();
+  before(() => {
+    return new Promise( (resolve, reject) => {
+      handler.requestHandler(req, res);
+      setTimeout(() => {
+        resolve();
+      }, 1500);
     });
-
-    promise.then(() => {
-      expect(res._responseCode).to.equal(200);
-      console.log(res._headers);
-      expect(res._headers['Content-Type']).to.equal('text.html');
-    }).catch(err => { console.log(err); });
-
   });
+
+
+  it('Should 200 when asked for / and have text/html content type', function() {
+    console.log(res._data);
+    expect(res._responseCode).to.equal(200);
+    expect(res._headers['Content-Type']).to.equal('text/html');
+  });
+
 
 });

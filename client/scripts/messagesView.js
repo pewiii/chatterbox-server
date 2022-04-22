@@ -16,6 +16,7 @@ var MessagesView = {
     var room = Rooms.checkRoomSelected();
     var messages = Messages.getMessages(room);
     _.each(messages, function(message) {
+      console.log(message);
       if (message.text.includes('<script')) {
         return;
       }
@@ -25,7 +26,7 @@ var MessagesView = {
         message.friend = 'nofriend';
       }
       message = MessageView.render(message);
-      message.text;
+      //message.text;
       MessagesView.$chats.append(message);
     });
     MessagesView.initialize();

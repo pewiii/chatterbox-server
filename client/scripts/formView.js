@@ -17,9 +17,10 @@ var FormView = {
     var message = {roomname: Rooms.checkRoomSelected(), text: text, username: App.username};
     Parse.create(message, function(data) {
       console.log('success');
-      console.log(data);
-      Messages.addMessage(data[0]);
-      MessagesView.renderMessage(data[0]);
+      var msg = JSON.parse(data);
+      console.log(msg);
+      Messages.addMessage(msg);
+      MessagesView.renderMessage(msg);
     }, function(data) {
       console.log('POST Fail:  ' + JSON.stringify(data));
     });

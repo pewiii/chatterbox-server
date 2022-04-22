@@ -4,7 +4,7 @@
 
 var Parse = {
 
-  server: `https://app-hrsei-api.herokuapp.com/api/chatterbox/messages/${window.CAMPUS}`,
+  server: `http://127.0.0.1:3000/classes/messages`,
 
   create: function(message, successCB, errorCB = null) {
     // TODO: send a request to the Parse API to save the message
@@ -12,7 +12,7 @@ var Parse = {
 
     $.ajax({
       // This is the url you should use to communicate with the API server.
-      url: `https://app-hrsei-api.herokuapp.com/api/chatterbox/messages/${window.CAMPUS}`,
+      url: Parse.server,
       type: 'POST',
       data: JSON.stringify(message),
       contentType: 'application/json',

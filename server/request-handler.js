@@ -1,10 +1,26 @@
 var fs = require('fs');
+var url = require('url');
 
 var defaultCorsHeaders = {
   'access-control-allow-origin': '*',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'access-control-allow-headers': 'content-type, accept',
   'access-control-max-age': 10 // Seconds.
+};
+var sendFile = function(path, res, contentType = 'text/html') {
+  var headers = Object.create(defaultCorsHeaders);
+  //if (contentType) {
+  headers['Content-Type'] = contentType;
+  //}
+  console.log(__dirname + path);
+  fs.readFile(__dirname + path, 'utf-8', (err, data) => {
+    if (!err) {
+      res.writeHead(200, headers);
+      res.end(data);
+    } else {
+      console.error(err);
+    }
+  });
 };
 
 var _data = {results: []};
@@ -14,34 +30,40 @@ var requestHandler = function(request, response) {
   var statusCode = 200;
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = 'text/plain';
-
-  if (request.url === '/') {
-    fs.readFile('../client/chatterbox.html', 'utf-8', (err, data) => {
-      headers['Content-Type'] = 'text/html';
-      response.writeHead(statusCode, headers);
-      response.end(data);
-    });
-  } else if (request.url === '/classes/messages' && request.method === 'GET') {
+  var splitURL = request.url.split('/');
+  var parsedURL = url.parse(request.url);
+  if (parsedURL.pathname === '/') {
+    sendFile('/../client/chatterbox.html', response, 'text/html');
+  } else if (splitURL[1] === 'client') {
+    if (splitURL[2] === 'images') {
+      sendFile('/../client/images/' + splitURL[3], response, 'image/gif');
+    } else if (splitURL[2] === 'styles') {
+      sendFile('/../client/styles/' + splitURL[3], response, 'text/css');
+    } else if (splitURL[2] === 'scripts') {
+      sendFile('/../client/scripts/' + splitURL[3], response, 'text/javascript');
+    }
+  } else if (parsedURL.pathname === '/classes/messages' && request.method === 'GET') {
+    //headers['Content-Type'] = 'application/json';
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify(_data));
-  } else if (request.url === '/classes/messages' && request.method === 'POST') {
-
+  } else if (parsedURL.pathname === '/classes/messages' && request.method === 'POST') {
+    var headers = Object.create(defaultCorsHeaders);
+    headers['Content-Type'] = 'application/json';
     var body = '';
     request.on('data', (chunk) => {
       body += chunk;
     }).on('end', () => {
-      //console.log(body);
       response.writeHead(201, headers);
       _data.results.push(JSON.parse(body));
-      response.end();
+      response.end(JSON.stringify(body));
     });
 
   } else {
     response.writeHead(404, headers);
     response.end();
   }
-  //response.end('Hello, World!');
 };
+
 
 /*************************************************************
 
