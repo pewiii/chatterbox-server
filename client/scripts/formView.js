@@ -16,8 +16,11 @@ var FormView = {
     var text = $('#message').val();
     var message = {roomname: Rooms.checkRoomSelected(), text: text, username: App.username};
     Parse.create(message, function(data) {
-      console.log('success', data);
+      console.log('success');
       //var msg = JSON.parse(data);
+      // if (typeof data === 'string') {
+        // data = JSON.parse(data);
+      // }
       console.log(data);
       Messages.addMessage(data);
       MessagesView.renderMessage(data);

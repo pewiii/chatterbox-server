@@ -26,8 +26,9 @@ var App = {
   fetch: function(callback = ()=>{}) {
     Parse.readAll((data) => {
       // TODO: Use the data to update Messages and Rooms
-
-      data = JSON.parse(data);
+      if (typeof data === 'string') {
+        data = JSON.parse(data);
+      }
       data = data.results;
       console.log(data);
       for (var msg of data) {
