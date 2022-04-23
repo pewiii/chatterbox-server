@@ -12,7 +12,7 @@ var sendFile = function(path, res, contentType = 'text/html') {
   //if (contentType) {
   headers['Content-Type'] = contentType;
   //}
-  console.log(__dirname + path);
+  //console.log(__dirname + path);
   fs.readFile(__dirname + path, 'utf-8', (err, data) => {
     if (!err) {
       res.writeHead(200, headers);
@@ -45,7 +45,13 @@ var requestHandler = function(request, response) {
   } else if (parsedURL.pathname === '/classes/messages' && request.method === 'GET') {
     //headers['Content-Type'] = 'application/json';
     response.writeHead(statusCode, headers);
-    response.end(JSON.stringify(_data));
+    if (request.url.indexOf('order=-createdAt')) {
+      var results = _data.results.slice();
+      results.sort((a, b) => (Date.parse(a.createdAt) < Date.parse(b.createdAt)) ? 1 : -1);
+      response.end(JSON.stringify({results}));
+    } else {
+      response.end(JSON.stringify(_data));
+    }
   } else if (parsedURL.pathname === '/classes/messages' && request.method === 'POST') {
     var headers = Object.create(defaultCorsHeaders);
     headers['Content-Type'] = 'application/json';
@@ -54,10 +60,26 @@ var requestHandler = function(request, response) {
       body += chunk;
     }).on('end', () => {
       response.writeHead(201, headers);
-      _data.results.push(JSON.parse(body));
-      response.end(JSON.stringify(body));
+      body = JSON.parse(body);
+      if (!body.username || !body.text) {
+        response.writeHead(400, headers);
+        response.end();
+      } else {
+        body.createdAt = new Date();
+        //console.log(body);
+        _data.results.push(body);
+        console.log(JSON.stringify(body));
+        response.end(JSON.stringify(body));
+      }
     });
-
+  } else if (parsedURL.pathname === '/classes/messages' && request.method === 'DELETE') {
+    _data.results.pop();
+    headers['Content-Type'] = 'application/json';
+    response.writeHead(200, headers);
+    response.end(JSON.stringify(_data));
+  } else if (parsedURL.pathname === '/classes/messages' && request.method === 'OPTIONS') {
+    response.writeHead(200, headers);
+    response.end();
   } else {
     response.writeHead(404, headers);
     response.end();

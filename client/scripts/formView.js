@@ -16,11 +16,11 @@ var FormView = {
     var text = $('#message').val();
     var message = {roomname: Rooms.checkRoomSelected(), text: text, username: App.username};
     Parse.create(message, function(data) {
-      console.log('success');
-      var msg = JSON.parse(data);
-      console.log(msg);
-      Messages.addMessage(msg);
-      MessagesView.renderMessage(msg);
+      console.log('success', data);
+      //var msg = JSON.parse(data);
+      console.log(data);
+      Messages.addMessage(data);
+      MessagesView.renderMessage(data);
     }, function(data) {
       console.log('POST Fail:  ' + JSON.stringify(data));
     });

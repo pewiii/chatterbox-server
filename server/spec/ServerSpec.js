@@ -117,12 +117,48 @@ describe('Node Server Request Listener Function', function() {
     });
   });
 
-
   it('Should 200 when asked for / and have text/html content type', function() {
-    console.log(res._data);
+    //console.log(res._data);
     expect(res._responseCode).to.equal(200);
     expect(res._headers['Content-Type']).to.equal('text/html');
   });
 
+  it('Should 200 for "/classes/messages" with an OPTIONS request', function() {
+    var req = new stubs.request('/classes/messages', 'OPTIONS');
+    var res = new stubs.response();
+    handler.requestHandler(req, res);
+
+    expect(res._responseCode).to.equal(200);
+    expect(res._headers['access-control-allow-methods']).to.equal('GET, POST, PUT, DELETE, OPTIONS');
+  });
+
+  it('Should sort results array when given order options', function() {
+    var req = new stubs.request('/classes/messages?order=-createdAt', 'GET');
+    var res = new stubs.response();
+    handler.requestHandler(req, res);
+
+    var msg = JSON.parse(res._data).results;
+    var date1 = Date.parse(msg[0].createdAt);
+    var date2 = Date.parse(msg[1].createdAt);
+
+    expect(date1 > date2).to.be.true;
+  });
+
+  it('should return 400 for bad message format when a POST is made', function() {
+    var badMsg = {};
+    var req = new stubs.request('/classes/messages', 'POST', badMsg);
+    var res = new stubs.response();
+    handler.requestHandler(req, res);
+
+    expect(res._responseCode).to.equal(400);
+  });
+
+  it('should delete most recent message when a DELETE is made', function() {
+    var req = new stubs.request('/classes/messages', 'DELETE');
+    var res = new stubs.response();
+    handler.requestHandler(req, res);
+    var data = JSON.parse(res._data);
+    expect(data.results.length).to.equal(1);
+  });
 
 });
